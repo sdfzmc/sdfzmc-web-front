@@ -12,6 +12,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/styles', express.static(path.join(__dirname, 'src', 'styles')));
 app.use('/scripts', express.static(path.join(__dirname, 'src', 'scripts')));
 app.use('/pages', express.static(path.join(__dirname, 'src', 'pages')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.get('/api/config', (req, res) => {
   res.json({ apiUrl: API_URL });
