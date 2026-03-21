@@ -1,0 +1,174 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  background-color: #f5f5f5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.container h1 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.container p {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn {
+  padding: 0.75rem 2rem;
+  background-color: #707070;
+  color: white;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 300ms;
+}
+
+.btn:hover {
+  background-color: #58bc82;
+  color: #707070;
+}
+
+.card {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  width: 320px;
+}
+
+.form {
+  --bg-light: #efefef;
+  --bg-dark: #707070;
+  --clr: #58bc82;
+  --clr-alpha: #9c9c9c60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 300px;
+}
+
+.form .input-span {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form input[type="text"],
+.form input[type="password"] {
+  border-radius: 0.5rem;
+  padding: 1rem 0.75rem;
+  width: 100%;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--clr-alpha);
+  outline: 2px solid var(--bg-dark);
+}
+
+.form input[type="text"]:focus,
+.form input[type="password"]:focus {
+  outline: 2px solid var(--clr);
+}
+
+.label {
+  align-self: flex-start;
+  color: var(--clr);
+  font-weight: 600;
+}
+
+.form .submit {
+  padding: 1rem 0.75rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 3rem;
+  background-color: var(--bg-dark);
+  color: var(--bg-light);
+  border: none;
+  cursor: pointer;
+  transition: all 300ms;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.form .submit:hover {
+  background-color: var(--clr);
+  color: var(--bg-dark);
+}
+
+.span {
+  text-decoration: none;
+  color: var(--bg-dark);
+}
+
+.span a {
+  color: var(--clr);
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+#message {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  display: none;
+}
+
+#userInfo {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 1rem;
+}
+
+#userInfo h2 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+#userInfo p {
+  margin: 0.5rem 0;
+  color: #555;
+}
+
+#logoutBtn {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--bg-dark);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#logoutBtn:hover {
+  background-color: var(--clr);
+}
