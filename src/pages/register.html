@@ -11,16 +11,27 @@
   <div class="card">
     <form class="form" id="registerForm">
       <span class="input-span">
+        <label for="email" class="label">邮箱</label>
+        <div class="input-group">
+          <input type="email" name="email" id="email" placeholder="请输入邮箱地址" />
+          <button type="button" id="sendCodeBtn" class="send-code-btn">发送验证码</button>
+        </div>
+      </span>
+      <span class="input-span">
+        <label for="code" class="label">验证码</label>
+        <input type="text" name="code" id="code" placeholder="请输入验证码" maxlength="6" />
+      </span>
+      <span class="input-span">
         <label for="username" class="label">用户名</label>
-        <input type="text" name="username" id="username" />
+        <input type="text" name="username" id="username" placeholder="请输入用户名" />
       </span>
       <span class="input-span">
         <label for="password" class="label">密码</label>
-        <input type="password" name="password" id="password" />
+        <input type="password" name="password" id="password" placeholder="请输入密码" />
       </span>
       <span class="input-span">
         <label for="confirmPassword" class="label">确认密码</label>
-        <input type="password" name="confirmPassword" id="confirmPassword" />
+        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="请再次输入密码" />
       </span>
       <input class="submit" type="submit" value="注册" />
       <span class="span">已有账号？<a href="/pages/login.html">去登录</a></span>

@@ -10,13 +10,127 @@ fetch('/api/config')
 
 const registerForm = document.getElementById('registerForm');
 const messageDiv = document.getElementById('message');
+const sendCodeBtn = document.getElementById('sendCodeBtn');
+const emailInput = document.getElementById('email');
+const codeInput = document.getElementById('code');
+
+let isCodeSent = false;
+let countdownTimer = null;
+
+// 发送验证码按钮点击事件
+sendCodeBtn.addEventListener('click', async () => {
+  const email = emailInput.value.trim();
+  
+  if (!email) {
+    showMessage('请输入邮箱地址');
+    return;
+  }
+  
+  if (!isValidEmail(email)) {
+    showMessage('请输入有效的邮箱地址');
+    return;
+  }
+  
+  try {
+    sendCodeBtn.disabled = true;
+    sendCodeBtn.textContent = '发送中...';
+    
+    const formData = new FormData();
+    formData.append('email', email);
+    
+    const response = await fetch(`${API_URL}/send-code`, {
+      method: 'POST',
+      body: formData
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      showMessage(data.message || '验证码已发送，请检查邮箱', 'green');
+      isCodeSent = true;
+      startCountdown();
+    } else {
+      showMessage(data.detail || '发送失败，请稍后重试');
+      sendCodeBtn.disabled = false;
+      sendCodeBtn.textContent = '发送验证码';
+    }
+  } catch (error) {
+    showMessage('网络错误：' + error.message);
+    sendCodeBtn.disabled = false;
+    sendCodeBtn.textContent = '发送验证码';
+  }
+});
+
+// 倒计时函数
+function startCountdown() {
+  let seconds = 60;
+  sendCodeBtn.classList.add('countdown');
+  sendCodeBtn.textContent = `${seconds}秒后重发`;
+  
+  countdownTimer = setInterval(() => {
+    seconds--;
+    sendCodeBtn.textContent = `${seconds}秒后重发`;
+    
+    if (seconds <= 0) {
+      clearInterval(countdownTimer);
+      sendCodeBtn.classList.remove('countdown');
+      sendCodeBtn.disabled = false;
+      sendCodeBtn.textContent = '发送验证码';
+      isCodeSent = false;
+    }
+  }, 1000);
+}
+
+// 邮箱验证正则
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
 
 registerForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   
+  const email = emailInput.value.trim();
+  const code = codeInput.value.trim();
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
   const confirmPassword = document.getElementById('confirmPassword').value;
+  
+  // 验证邮箱和验证码
+  if (!email) {
+    showMessage('请输入邮箱地址');
+    return;
+  }
+  
+  if (!isCodeSent) {
+    showMessage('请先获取验证码');
+    return;
+  }
+  
+  if (!code) {
+    showMessage('请输入验证码');
+    return;
+  }
+  
+  // 验证邮箱
+  try {
+    const verifyResponse = await fetch(`${API_URL}/verify-code`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({ email, code })
+    });
+    
+    if (!verifyResponse.ok) {
+      const errorData = await verifyResponse.json();
+      showMessage(errorData.detail || '验证码错误');
+      return;
+    }
+  } catch (error) {
+    showMessage('网络错误：' + error.message);
+    return;
+  }
   
   if (password !== confirmPassword) {
     showMessage('两次输入的密码不一致');
