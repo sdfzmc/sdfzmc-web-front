@@ -1,8 +1,7 @@
-let API_URL = 'http://103.40.13.68:10951';
+// API 基础路径 - 使用相对路径让 Netlify 代理生效
+const API_BASE = '/api';
 
-// 如果需要动态配置，可以保留 fetch('/api/config')
-// 否则直接使用上面的固定地址
-console.log('API URL:', API_URL);
+console.log('API Base:', API_BASE);
 
 const loginForm = document.getElementById('loginForm');
 const messageDiv = document.getElementById('message');
@@ -106,7 +105,7 @@ loginForm.addEventListener('submit', async (e) => {
     formData.append('password', password);
     formData.append('turnstile_token', turnstileToken);
     
-    const response = await fetch(`${API_URL}/token`, {
+    const response = await fetch(`${API_BASE}/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -142,7 +141,7 @@ async function fetchUserInfo() {
   if (!accessToken) return;
   
   try {
-    const response = await fetch(`${API_URL}/me`, {
+    const response = await fetch(`${API_BASE}/me`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${accessToken}`

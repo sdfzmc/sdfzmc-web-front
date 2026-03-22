@@ -36,7 +36,7 @@ front/
 `build.js` 脚本会自动:
 - 复制 `src/` 目录到 `public/`
 - 复制 `images/` 到 `public/images/`
-- 复制 `index.html` 到 `public/`
+- 复制 `src/index.html` 到 `public/`
 - **自动修复所有 HTML 文件中的路径引用** (关键!)
 
 ### 3. Netlify 配置说明
@@ -66,6 +66,8 @@ front/
   status = 200
   force = false
 ```
+
+**重要**: 前端代码必须使用相对路径 `/api/...` 才能通过 Netlify 代理访问后端!
 
 ### 4. 部署步骤
 

@@ -1,8 +1,7 @@
-let API_URL = 'http://103.40.13.68:10951';
+// API 基础路径 - 使用相对路径让 Netlify 代理生效
+const API_BASE = '/api';
 
-// 如果需要动态配置，可以保留 fetch('/api/config')
-// 否则直接使用上面的固定地址
-console.log('API URL:', API_URL);
+console.log('API Base:', API_BASE);
 
 const registerForm = document.getElementById('registerForm');
 const messageDiv = document.getElementById('message');
@@ -75,7 +74,7 @@ sendCodeBtn.addEventListener('click', async () => {
     formData.append('email', email);
     formData.append('turnstile_token', turnstileToken);
     
-    const response = await fetch(`${API_URL}/send-code`, {
+    const response = await fetch(`${API_BASE}/send-code`, {
       method: 'POST',
       body: formData
     });
@@ -151,7 +150,7 @@ registerForm.addEventListener('submit', async (e) => {
   
   // 验证邮箱
   try {
-    const verifyResponse = await fetch(`${API_URL}/verify-code`, {
+    const verifyResponse = await fetch(`${API_BASE}/verify-code`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -180,7 +179,7 @@ registerForm.addEventListener('submit', async (e) => {
   }
   
   try {
-    const response = await fetch(`${API_URL}/register`, {
+    const response = await fetch(`${API_BASE}/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
