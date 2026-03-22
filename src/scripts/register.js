@@ -1,7 +1,12 @@
-// API 基础路径 - 使用相对路径让 Netlify 代理生效
-const API_BASE = '/api';
+let API_URL = 'http://localhost:8000';
 
-console.log('API Base:', API_BASE);
+fetch('/api/config')
+  .then(res => res.json())
+  .then(config => {
+    API_URL = config.apiUrl;
+    console.log('API URL:', API_URL);
+  })
+  .catch(err => console.error('Failed to load config:', err));
 
 const registerForm = document.getElementById('registerForm');
 const messageDiv = document.getElementById('message');
@@ -74,7 +79,7 @@ sendCodeBtn.addEventListener('click', async () => {
     formData.append('email', email);
     formData.append('turnstile_token', turnstileToken);
     
-    const response = await fetch(`${API_BASE}/send-code`, {
+    const response = await fetch(`${API_URL}/send-code`, {
       method: 'POST',
       body: formData
     });
@@ -150,7 +155,7 @@ registerForm.addEventListener('submit', async (e) => {
   
   // 验证邮箱
   try {
-    const verifyResponse = await fetch(`${API_BASE}/verify-code`, {
+    const verifyResponse = await fetch(`${API_URL}/verify-code`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -179,7 +184,7 @@ registerForm.addEventListener('submit', async (e) => {
   }
   
   try {
-    const response = await fetch(`${API_BASE}/register`, {
+    const response = await fetch(`${API_URL}/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

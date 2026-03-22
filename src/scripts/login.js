@@ -1,7 +1,12 @@
-// API 基础路径 - 使用相对路径让 Netlify 代理生效
-const API_BASE = '/api';
+let API_URL = 'http://localhost:8000';
 
-console.log('API Base:', API_BASE);
+fetch('/api/config')
+  .then(res => res.json())
+  .then(config => {
+    API_URL = config.apiUrl;
+    console.log('API URL:', API_URL);
+  })
+  .catch(err => console.error('Failed to load config:', err));
 
 const loginForm = document.getElementById('loginForm');
 const messageDiv = document.getElementById('message');
@@ -105,7 +110,7 @@ loginForm.addEventListener('submit', async (e) => {
     formData.append('password', password);
     formData.append('turnstile_token', turnstileToken);
     
-    const response = await fetch(`${API_BASE}/token`, {
+    const response = await fetch(`${API_URL}/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -141,7 +146,7 @@ async function fetchUserInfo() {
   if (!accessToken) return;
   
   try {
-    const response = await fetch(`${API_BASE}/me`, {
+    const response = await fetch(`${API_URL}/me`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${accessToken}`
