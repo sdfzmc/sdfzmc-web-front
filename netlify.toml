@@ -2,14 +2,14 @@
 # 文档：https://docs.netlify.com/configure-builds/file-based-configuration/
 
 [build]
-  # 前端目录（当前目录就是 front，所以 base 为空或 .）
+  # 前端目录
   base = "."
   
-  # 构建命令（纯静态站点不需要构建）
-  command = "echo 'Building static site...'"
+  # 构建命令 - 使用 Node.js 构建脚本
+  command = "npm run build"
   
-  # 发布目录（当前目录）
-  publish = "."
+  # 发布目录 - 必须是 public 目录
+  publish = "public"
 
 # 设置环境变量
 [build.environment]
@@ -24,11 +24,12 @@
   status = 200
   force = true
 
-# SPA 路由支持（所有路径重定向到 index.html）
+# SPA 路由支持（所有路径重定向到 index.html，但不影响已存在的文件）
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false
 
 # 设置安全头
 [[headers]]

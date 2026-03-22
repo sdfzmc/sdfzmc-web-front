@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用户注册</title>
+  <link rel="stylesheet" href="/styles/main.css">
+  <!-- Cloudflare Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+</head>
+<body>
+  <!-- 导航栏 - 页面顶部 -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a href="/">帅太附中神人服</a>
+    </div>
+    <div class="navbar-links">
+      <a href="/#intro">介绍</a>
+      <a href="https://www.ynsdfz.net" target="_blank">友情链接</a>
+      <a href="/pages/about.html">关于</a>
+      <a href="https://afdian.com/Enderboy666" target="_blank">赞助</a>
+      <a href="https://www.bilibili.com/video/BV1UT42167xb/?spm_id_from=333.337.search-card.all.click&vd_source=c754f4ad283ecd3b6ed486af336651c4">千万别点</a>
+      <a href="/pages/login.html" class="login-btn">登录</a>
+      <a href="/pages/register.html" class="register-btn">注册</a>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <h1>用户注册</h1>
+    <div class="card">
+      <form class="form" id="registerForm">
+        <span class="input-span">
+          <label for="email" class="label">邮箱</label>
+          <div class="input-group">
+            <input type="email" name="email" id="email" placeholder="请输入邮箱地址" />
+            <button type="button" id="sendCodeBtn" class="send-code-btn">发送验证码</button>
+          </div>
+        </span>
+        <span class="input-span">
+          <label for="code" class="label">验证码</label>
+          <input type="text" name="code" id="code" placeholder="请输入验证码" maxlength="6" />
+        </span>
+        <!-- Cloudflare Turnstile 验证 -->
+        <span class="input-span">
+          <div class="turnstile-container" id="turnstile-widget"></div>
+        </span>
+        <span class="input-span">
+          <label for="username" class="label">用户名</label>
+          <input type="text" name="username" id="username" placeholder="请输入用户名" />
+        </span>
+        <span class="input-span">
+          <label for="password" class="label">密码</label>
+          <input type="password" name="password" id="password" placeholder="请输入密码" />
+        </span>
+        <span class="input-span">
+          <label for="confirmPassword" class="label">确认密码</label>
+          <input type="password" name="confirmPassword" id="confirmPassword" placeholder="请再次输入密码" />
+        </span>
+        <input class="submit" type="submit" value="注册" />
+        <span class="span">已有账号？<a href="/pages/login.html">去登录</a></span>
+      </form>
+    </div>
+    <div id="message"></div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <p>&copy; 2024 帅太附中神人服。All rights reserved.</p>
+  </footer>
+
+  <script src="/scripts/register.js"></script>
+</body>
+</html>
