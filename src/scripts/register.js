@@ -1,12 +1,8 @@
-let API_URL = 'http://localhost:8000';
+let API_URL = 'http://103.40.13.68:10951';
 
-fetch('/api/config')
-  .then(res => res.json())
-  .then(config => {
-    API_URL = config.apiUrl;
-    console.log('API URL:', API_URL);
-  })
-  .catch(err => console.error('Failed to load config:', err));
+// 如果需要动态配置，可以保留 fetch('/api/config')
+// 否则直接使用上面的固定地址
+console.log('API URL:', API_URL);
 
 const registerForm = document.getElementById('registerForm');
 const messageDiv = document.getElementById('message');
@@ -16,6 +12,40 @@ const codeInput = document.getElementById('code');
 
 let isCodeSent = false;
 let countdownTimer = null;
+let turnstileToken = null;
+
+// 初始化 Cloudflare Turnstile
+function initTurnstile() {
+  if (typeof turnstile === 'undefined') {
+    console.warn('Turnstile 还未加载，等待 500ms 后重试...');
+    setTimeout(initTurnstile, 500);
+    return;
+  }
+  
+  turnstile.render('#turnstile-widget', {
+    sitekey: '0x4AAAAAACuZ_dFYYjtti6lR',
+    callback: function(token) {
+      console.log('Turnstile 验证通过，token:', token);
+      turnstileToken = token;
+    },
+    'error-callback': function(err) {
+      console.error('Turnstile 错误:', err);
+      showMessage('人机验证失败，请刷新页面重试');
+    },
+    'expired-callback': function() {
+      console.warn('Turnstile token 已过期');
+      turnstileToken = null;
+      showMessage('人机验证已过期，请重新验证');
+    }
+  });
+}
+
+// 页面加载完成后初始化 Turnstile
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initTurnstile);
+} else {
+  initTurnstile();
+}
 
 // 发送验证码按钮点击事件
 sendCodeBtn.addEventListener('click', async () => {
@@ -31,12 +61,19 @@ sendCodeBtn.addEventListener('click', async () => {
     return;
   }
   
+  // 检查 Turnstile 验证
+  if (!turnstileToken) {
+    showMessage('请先完成人机验证');
+    return;
+  }
+  
   try {
     sendCodeBtn.disabled = true;
     sendCodeBtn.textContent = '发送中...';
     
     const formData = new FormData();
     formData.append('email', email);
+    formData.append('turnstile_token', turnstileToken);
     
     const response = await fetch(`${API_URL}/send-code`, {
       method: 'POST',
@@ -148,7 +185,7 @@ registerForm.addEventListener('submit', async (e) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ username, password, email })
     });
     
     const data = await response.json();

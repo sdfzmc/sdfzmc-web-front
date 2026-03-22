@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>帅太附中神人服</title>
-  <link rel="stylesheet" href="styles/main.css">
+  <title>{% block title %}帅太附中神人服{% endblock %}</title>
+  <link rel="stylesheet" href="/styles/main.css">
+  {% block head %}{% endblock %}
 </head>
 <body>
   <!-- 导航栏 - 页面顶部 -->
@@ -13,22 +14,24 @@
       <a href="/">帅太附中神人服</a>
     </div>
     <div class="navbar-links">
-      <a href="#intro">介绍</a>
+      <a href="/#intro">介绍</a>
       <a href="https://www.ynsdfz.net" target="_blank">友情链接</a>
       <a href="/pages/about.html">关于</a>
       <a href="https://afdian.com/Enderboy666" target="_blank">赞助</a>
       <a href="https://www.bilibili.com/video/BV1UT42167xb/?spm_id_from=333.337.search-card.all.click&vd_source=c754f4ad283ecd3b6ed486af336651c4">千万别点</a>
-      <a href="/pages/login.html" class="login-btn">登录</a>
-      <a href="/pages/register.html" class="register-btn">注册</a>
+      {% if user_logged_in %}
+        <a href="/pages/login.html" class="user-link">个人中心</a>
+        <a href="#" class="logout-btn">退出</a>
+      {% else %}
+        <a href="/pages/login.html" class="login-btn">登录</a>
+        <a href="/pages/register.html" class="register-btn">注册</a>
+      {% endif %}
     </div>
   </nav>
 
-  <!--主页面介绍-->
+  <!-- 页面主要内容 -->
   <main class="main-content">
-    <div class="introduction" id="intro">
-      <h1>欢迎来到帅太附中神人服！</h1>
-      <h3>这是一个 Minecraft 服务器网页！</h3>
-    </div>
+    {% block content %}{% endblock %}
   </main>
 
   <!-- 页脚 -->
@@ -36,5 +39,6 @@
     <p>&copy; 2024 帅太附中神人服。All rights reserved.</p>
   </footer>
 
+  {% block scripts %}{% endblock %}
 </body>
 </html>

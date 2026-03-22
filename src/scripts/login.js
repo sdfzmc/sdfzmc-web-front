@@ -1,12 +1,8 @@
-let API_URL = 'http://localhost:8000';
+let API_URL = 'http://103.40.13.68:10951';
 
-fetch('/api/config')
-  .then(res => res.json())
-  .then(config => {
-    API_URL = config.apiUrl;
-    console.log('API URL:', API_URL);
-  })
-  .catch(err => console.error('Failed to load config:', err));
+// 如果需要动态配置，可以保留 fetch('/api/config')
+// 否则直接使用上面的固定地址
+console.log('API URL:', API_URL);
 
 const loginForm = document.getElementById('loginForm');
 const messageDiv = document.getElementById('message');
@@ -15,22 +11,100 @@ const displayUsername = document.getElementById('displayUsername');
 const displayId = document.getElementById('displayId');
 const logoutBtn = document.getElementById('logoutBtn');
 
+// 登录方式切换
+const tabBtns = document.querySelectorAll('.tab-btn');
+const usernameLogin = document.getElementById('username-login');
+const emailLogin = document.getElementById('email-login');
+const usernameInput = document.getElementById('username');
+const emailInput = document.getElementById('email');
+
+let currentLoginType = 'username';
+let turnstileToken = null;
 let accessToken = localStorage.getItem('access_token');
 
 if (accessToken) {
   fetchUserInfo();
 }
 
+// 初始化 Cloudflare Turnstile
+function initTurnstile() {
+  if (typeof turnstile === 'undefined') {
+    console.warn('Turnstile 还未加载，等待 500ms 后重试...');
+    setTimeout(initTurnstile, 500);
+    return;
+  }
+  
+  turnstile.render('#turnstile-widget', {
+    sitekey: '0x4AAAAAACuZ_dFYYjtti6lR',
+    callback: function(token) {
+      console.log('Turnstile 验证通过，token:', token);
+      turnstileToken = token;
+    },
+    'error-callback': function(err) {
+      console.error('Turnstile 错误:', err);
+      showMessage('人机验证失败，请刷新页面重试');
+    },
+    'expired-callback': function() {
+      console.warn('Turnstile token 已过期');
+      turnstileToken = null;
+      showMessage('人机验证已过期，请重新验证');
+    }
+  });
+}
+
+// 页面加载完成后初始化 Turnstile
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initTurnstile);
+} else {
+  initTurnstile();
+}
+
+// 登录方式切换
+tabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tabBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const tabType = btn.dataset.tab;
+    currentLoginType = tabType;
+    
+    if (tabType === 'username') {
+      usernameLogin.style.display = 'flex';
+      emailLogin.style.display = 'none';
+      usernameInput.setAttribute('required', '');
+      emailInput.removeAttribute('required');
+    } else {
+      usernameLogin.style.display = 'none';
+      emailLogin.style.display = 'flex';
+      usernameInput.removeAttribute('required');
+      emailInput.setAttribute('required', '');
+    }
+  });
+});
+
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   
-  const username = document.getElementById('username').value;
+  // 检查 Turnstile 验证
+  if (!turnstileToken) {
+    showMessage('请先完成人机验证');
+    return;
+  }
+  
+  let identifier;
+  if (currentLoginType === 'username') {
+    identifier = usernameInput.value;
+  } else {
+    identifier = emailInput.value;
+  }
+  
   const password = document.getElementById('password').value;
   
   try {
     const formData = new URLSearchParams();
-    formData.append('username', username);
+    formData.append('username', identifier);
     formData.append('password', password);
+    formData.append('turnstile_token', turnstileToken);
     
     const response = await fetch(`${API_URL}/token`, {
       method: 'POST',

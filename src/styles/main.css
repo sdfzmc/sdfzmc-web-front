@@ -9,6 +9,92 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+/* 导航栏样式 */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #707070 0%, #58bc82 100%);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+}
+
+.navbar-brand a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 700;
+  transition: opacity 300ms;
+}
+
+.navbar-brand a:hover {
+  opacity: 0.8;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.navbar-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 300ms;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.navbar-links a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.navbar-links .login-btn,
+.navbar-links .register-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1.5rem;
+}
+
+.navbar-links .login-btn:hover,
+.navbar-links .register-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.navbar-links .user-link {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1.5rem;
+}
+
+.navbar-links .logout-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1.5rem;
+}
+
+.main-content {
+  margin-top: 80px;
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer {
+  background-color: #707070;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  width: 100%;
+  margin-top: auto;
+}
+
 .container {
   text-align: center;
   padding: 2rem;
@@ -169,6 +255,43 @@ body {
   cursor: not-allowed;
 }
 
+/* Cloudflare Turnstile 容器 */
+.turnstile-container {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+  min-height: 65px;
+}
+
+/* 登录方式切换标签 */
+.login-tabs {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.75rem;
+  background-color: var(--bg-light);
+  color: var(--bg-dark);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 300ms;
+}
+
+.tab-btn.active {
+  background-color: var(--clr);
+  color: white;
+}
+
+.tab-btn:hover:not(.active) {
+  background-color: var(--clr-alpha);
+}
+
 .span {
   text-decoration: none;
   color: var(--bg-dark);
@@ -221,4 +344,53 @@ h1 {
 
 #logoutBtn:hover {
   background-color: var(--clr);
+}
+
+/* 服务器信息卡片 */
+.serverinfo,
+.serveradmin,
+.video {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 600px;
+}
+
+.serverinfo h3,
+.serveradmin h3,
+.video h3 {
+  color: var(--bg-dark);
+  margin-bottom: 1rem;
+}
+
+.serverinfo p,
+.serveradmin p,
+.video p {
+  margin: 0.5rem 0;
+  color: #555;
+  line-height: 1.6;
+}
+
+.serverinfo a,
+.video a {
+  color: var(--clr);
+  text-decoration: none;
+}
+
+.serverinfo a:hover,
+.video a:hover {
+  text-decoration: underline;
+}
+
+.serveradmin img {
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+.serveradmin b {
+  color: var(--bg-dark);
 }

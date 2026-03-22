@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Turnstile 测试</title>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    #turnstile-widget {
+      margin: 20px 0;
+      min-height: 65px;
+    }
+    button {
+      background: #58bc82;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a16b;
+    }
+    #status {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+    }
+    .success {
+      background: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Cloudflare Turnstile 测试</h1>
+    <p>如果看到下方的验证组件，说明配置正确！</p>
+    
+    <div id="turnstile-widget"></div>
+    
+    <button onclick="checkToken()">检查 Token</button>
+    
+    <div id="status"></div>
+  </div>
+
+  <script>
+    let turnstileToken = null;
+    
+    function initTurnstile() {
+      if (typeof turnstile === 'undefined') {
+        console.warn('Turnstile 还未加载，等待 500ms 后重试...');
+        setTimeout(initTurnstile, 500);
+        return;
+      }
+      
+      console.log('开始初始化 Turnstile...');
+      console.log('Site Key:', '0x4AAAAAACuZ_dFYYjtti6lR');
+      
+      turnstile.render('#turnstile-widget', {
+        sitekey: '0x4AAAAAACuZ_dFYYjtti6lR',
+        callback: function(token) {
+          console.log('✅ Turnstile 验证通过！');
+          console.log('Token:', token);
+          turnstileToken = token;
+          
+          const statusDiv = document.getElementById('status');
+          statusDiv.textContent = '✅ 验证成功！Token: ' + token.substring(0, 20) + '...';
+          statusDiv.className = 'success';
+          statusDiv.style.display = 'block';
+        },
+        'error-callback': function(err) {
+          console.error('❌ Turnstile 错误:', err);
+          const statusDiv = document.getElementById('status');
+          statusDiv.textContent = '❌ 验证失败：' + JSON.stringify(err);
+          statusDiv.className = 'error';
+          statusDiv.style.display = 'block';
+        },
+        'expired-callback': function() {
+          console.warn('⚠️ Turnstile token 已过期');
+          turnstileToken = null;
+        }
+      });
+      
+      console.log('Turnstile 初始化完成');
+    }
+    
+    function checkToken() {
+      const statusDiv = document.getElementById('status');
+      if (turnstileToken) {
+        statusDiv.textContent = '✅ 当前 Token 有效：' + turnstileToken.substring(0, 30) + '...';
+        statusDiv.className = 'success';
+        statusDiv.style.display = 'block';
+      } else {
+        statusDiv.textContent = '⚠️ 还没有 Token，请先完成验证';
+        statusDiv.className = 'error';
+        statusDiv.style.display = 'block';
+      }
+    }
+    
+    // 页面加载完成后初始化
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initTurnstile);
+    } else {
+      initTurnstile();
+    }
+  </script>
+</body>
+</html>
